@@ -9,12 +9,12 @@ This is the first and only *individual* (as opposed to *team*) project this seme
 
 Term: Spring 2023
 
-+ Projec title: Lorem ipsum dolor sit amet
-+ This project is conducted by [your name]
++ Project Title: The Evolution of Ideas within Philosophical Schools
++ This project is conducted by Srushti Sanghavi
 
-+ Project summary: [a short summary] Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++ Project summary: This project uses the 'History of Philosophy' dataset from Kaggle to analyze philosophy texts of various authors. The focal point of this project is to analyze the evolution of schools within the branch of philosophy. There are several schools, each with their own objectives and ideas, and I am analyzing whether these schools have evolved over time. Mainly I am comparing the texts of each school during various periods and analyzing if the texts resonate with the original objective of the school when it was formed.
 
-Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
+This folder is orgarnized as follows.
 
 ```
 proj/
@@ -25,4 +25,4 @@ proj/
 └── output/
 ```
 
-Please see each subfolder for a README file.
+Please see each sub folder for a README file.

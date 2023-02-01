@@ -2,5 +2,5 @@
 
 ### Output folder
 
-The output directory contains analysis output, processed datasets, logs, or other processed things.
+The output directory contains the cleaned_philosophy_data.csv file, which is the cleaned and processed file for further analysis.
 

@@ -1,0 +1,330 @@
+---
+title: "The Evolution of Ideas within Philosophical Schools"
+author: "Srushti Sanghavi"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+<font size = "3">
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r include = FALSE}
+##1. Required Packages & Libraries for Data Processing and Analysis
+
+# Packages required
+packages = c("tidyverse", "tidytext", "tm", "RColorBrewer", "wordcloud", "SnowballC", "knitr")
+
+# Install packages not yet installed
+installed_packages <- packages %in% rownames(installed.packages())
+if (any(installed_packages == FALSE)) {
+  install.packages(packages[!installed_packages])
+}
+
+# Load required libraries
+invisible(lapply(packages, library, character.only = TRUE))
+
+### The below 2 steps are time consuming, hence please don't run them. Directly run step 4 below - Importing the cleaned data set from the output folder
+
+##2. Importing raw dataset from data folder
+
+ #philosophy_data = read.csv("../data/philosophy_data.csv")
+
+##3. Performing Data cleaning and transformation and writing the cleaned data file to output folder
+
+  # clean_data = philosophy_data
+  # str(clean_data)
+  # 
+  # clean_data$sentence_lowered = gsub("[[:punct:]]", "", clean_data$sentence_lowered) # Remove punctuation
+  # clean_data$sentence_lowered = removeWords(clean_data$sentence_lowered, stop_words$word) # Remove stopwords
+  # clean_data$sentence_lowered  = gsub("\\s+"," ",clean_data$sentence_lowered) # Remove extra space
+  # 
+  # 
+  # cleaned_philosophy_data = select(clean_data, c(1,2,3,6,8,9))
+  # colnames(cleaned_philosophy_data)[6] = "text"
+  #   
+  # write.csv(cleaned_philosophy_data,file = '../output/cleaned_philosophy_data.csv', row.names=FALSE)
+
+##4. Importing the cleaned data set from the output folder
+
+clean_phil_data = read.csv('../output/cleaned_philosophy_data.csv')
+
+##5. Data Story and Analysis
+```
+
+```{r echo = FALSE, fig.align = "center"}
+
+# Reading Image from the url directly
+
+include_graphics("https://images.squarespace-cdn.com/content/v1/57125c2c2b8dde54a34b537f/1615987424829-HIZ9FRLRQ7CC9A8XVQAP/img-ancient-greek-philosophers.jpg?format=2500w")
+
+```
+
+Philosophy is a very broad topic, with several sub topics associated with different schools of philosophy. Before getting into the details of these schools and what they represent, let's answer a fundamental question first.
+
+What is Philosophy?
+
+The oxford dictionary defines philosophy as "the study of the fundamental nature of knowledge, reality, and existence, especially when considered as an academic discipline."
+
+To me, philosophy is a journey into our world, to understand what makes our world the way it is and how we interact within this world. It's a journey where we ask lots of questions and try to determine answers without prior assumptions. These questions fall into three major branches of philosophy:
+
+a.  Metaphysics - This branch studies the nature of reality
+
+b.  Epistemology - This branch studies the nature and scope of knowledge
+
+c.  Value Theory - This branch studies human conduct (Ethics) and the nature of beauty (Aesthetics).
+
+Over the years, several schools of philosophy have been formed, each trying to find answers to questions associated with one or more of these branches of philosophy.
+
+This article will take you through some of these schools and showcase the evolution of thoughts of each of these schools. Mainly, we will look at the original objectives and ideas upon which each school was formed, and whether those ideas logically evolve over time to answer gripping questions. The word clouds present a comparison of ideas of each school over the years.
+
+For the analysis, I am using the 'History of Philosophy' dataset from Kaggle. The link of the dataset is <https://www.kaggle.com/datasets/kouroshalizadeh/history-of-philosophy>.
+
+So, let's begin.
+
+#### The School of Stoicism
+
+Three major beliefs form the epicenter of this school, namely, virtue is enough for happiness, other feelings and materialistic things should be regarded as indifferent and the world is ordered by God.
+
+```{r include = FALSE}
+# Filtering for each school
+school_data = clean_phil_data %>%
+  filter(school == 'stoicism') %>%
+  select(text, original_publication_date)
+
+# Creating a character vector list of text and year
+year_data = split(school_data$text,school_data$original_publication_date)
+  #class(year_data)
+text_year = lapply(year_data, FUN = paste, collapse= " ")
+  #class(text_year)
+
+# Creating a Corpus
+corpus = Corpus(VectorSource(text_year))
+corpus  = tm_map(corpus, content_transformer(stemDocument), language = "english") # Stemming
+
+# Creating a Document Term Matrix
+dtm = TermDocumentMatrix(corpus)
+matrix = as.matrix(dtm)
+colnames(matrix) = c("125", "170")
+```
+
+```{r echo = FALSE, fig.align = "center"}
+# Word cloud comparing text for different years
+comparison.cloud(matrix, max.words = 300, title.size = 2, random.order=FALSE, rot.per=0.35)
+```
+
+As seen above, the 125 A.D. era focused specifically on the physical concepts of characteristics and emotions that were to be considered indifferent in order to attain happiness. With time, the focus shifted to the metaphysical view of a human as seen in 170 A.D. The message here was to think about 'thyself', specifically about one's soul, mind and nature. While there was a logical flow to first understanding physical concepts and then metaphysical concepts, interestingly enough, the major lessons of this school - virtue, happiness and god - did not take a center stage in the texts at the time.
+
+#### The School of Rationalism
+
+This school believes that your life should be based on reason and logic, rather than emotions or religious beliefs.
+
+```{r include = FALSE}
+# Filtering for each school
+school_data = clean_phil_data %>%
+  filter(school == 'rationalism') %>%
+  select(text, original_publication_date)
+
+# Creating a character vector list
+year_data = split(school_data$text,school_data$original_publication_date)
+  #class(year_data)
+text_year = lapply(year_data, FUN = paste, collapse= " ")
+  #class(text_year)
+
+# Creating a Corpus
+corpus = Corpus(VectorSource(text_year))
+corpus  = tm_map(corpus, content_transformer(stemDocument), language = "english") #Stemming
+
+# Creating a Document Term Matrix
+dtm = TermDocumentMatrix(corpus)
+matrix = as.matrix(dtm)
+colnames(matrix) = c("1637", "1641", "1674", "1677", "1710")
+
+```
+
+```{r echo = FALSE, fig.align = "center"}
+# Word cloud comparing text for different years
+comparison.cloud(matrix, max.words = 500, title.size = 2, random.order=FALSE )
+```
+
+It's interesting to see how thoughts have evolved within this school. The beginning focused on 'matters of the heart' in the 1600's, moving on to concepts about the body and senses. The next focal point was on understanding how the mind works, eventually leading to more nuanced concepts such as god, good, evil and the universe in the early 1700's. These are extremely complex concepts, and it remains to be seen how profound concepts of morals and beliefs will be associated with logic. So far there are few answers, none with absolute logic and clarity.
+
+#### The School of Capitalism
+
+An important feature of this school is the motive to make profit. A capitalist society is one in which the factors of production such as factories and labour are owned privately, and market prices are set based on competition.
+
+```{r include = FALSE}
+# Filtering for each school
+school_data = clean_phil_data %>%
+  filter(school == 'capitalism') %>%
+  select(text, original_publication_date)
+
+# Create corpus of text year-wise
+year_data = split(school_data$text,school_data$original_publication_date)
+ #class(year_data)
+text_year = lapply(year_data, FUN = paste, collapse= " ")
+ #class(text_year)
+
+# Creating a Corpus
+corpus = Corpus(VectorSource(text_year))
+corpus  = tm_map(corpus, content_transformer(stemDocument), language = "english") # Stemming
+
+# Creating a Document Term Matrix
+dtm = TermDocumentMatrix(corpus)
+matrix = as.matrix(dtm)
+colnames(matrix) = c("1776", "1817", "1936")
+```
+
+```{r echo = FALSE, fig.align = "center"}
+# Word cloud comparing text for different years
+comparison.cloud(matrix, max.words = 500, title.size = 2, random.order=FALSE, rot.per=0.35)
+```
+
+From the figure above, we see that Capitalism in the late 1700's mainly involved texts on revenue generation from trade of commodities and natural resources between countries. This thought process shifted from simply trade of available commodities to in-house production of new commodities. The early 1800's preached ideas on increase in production, with a focus on labour and the importance of taxes. Trading was still the main idea during this era. 1900's saw a shift from only trading to employment and investment opportunities for the future. This is one school that appears to have a thought process that has been aligned since its formation and has evolved aptly with time to better understand changing economies and answer relevant questions.
+
+#### The School of Feminism
+
+The objective of this school is to change the "patriarchal" view of society and bring attention to topics such as sexism and gender-equality. As such, the pressing points for most texts and teachings of this school should revolve around feminism, or some synonyms of the female gender. However, as seen in the figure below, the 1700's introduced the main ideas of feminism very subtly, not using words such as "feminism", "woman" etc evidently. This period emphasized on the qualities of a woman and the different roles they played. This was in stark contrast to the 1900's, where the texts openly focused on women rights, slavery, oppression and racism. The civil rights movement led to the womens rights movement that aided philosophers to discuss topics of feminism boldly, as seen in the word cloud of 1981. Although it eventually achieved it's objective of spreading awareness about feminism, the school did not have a very strong start.
+
+```{r include = FALSE}
+# Filtering for each school
+school_data = clean_phil_data %>%
+  filter(school == 'feminism') %>%
+  select(text, original_publication_date)
+
+# Creating a character vector list
+year_data = split(school_data$text,school_data$original_publication_date)
+ #class(year_data)
+text_year = lapply(year_data, FUN = paste, collapse= " ")
+ #class(text_year)
+
+# Creating a Corpus
+corpus = Corpus(VectorSource(text_year))
+corpus  = tm_map(corpus, content_transformer(stemDocument), language = "english") # Stemming
+
+# Creating a Document Term Matrix
+dtm = TermDocumentMatrix(corpus)
+matrix = as.matrix(dtm)
+colnames(matrix) = c("1792", "1949", "1981")
+```
+
+```{r echo = FALSE, fig.align = "center"}
+# Word cloud comparing text for different years
+comparison.cloud(matrix, max.words = 500, title.size = 2, random.order=FALSE)
+```
+
+#### The School of Communism
+
+This school believes that in society, everyone should be considered equal. There should be no disparity in terms of wealth, class, or creed.
+
+```{r include = FALSE}
+# Filtering for each school
+school_data = clean_phil_data %>%
+  filter(school == 'communism') %>%
+  select(text, original_publication_date)
+
+# Creating a character vector list
+year_data = split(school_data$text,school_data$original_publication_date)
+ #class(year_data)
+text_year = lapply(year_data, FUN = paste, collapse= " ")
+ #class(text_year)
+
+# Creating a Corpus
+corpus = Corpus(VectorSource(text_year))
+corpus  = tm_map(corpus, content_transformer(stemDocument), language = "english") # Stemming
+
+# Creating a Document Term Matrix
+dtm = TermDocumentMatrix(corpus)
+matrix = as.matrix(dtm)
+colnames(matrix) = c("1848", "1862", "1883")
+```
+
+```{r echo = FALSE, fig.align = "center"}
+# Word cloud comparing text for different years
+comparison.cloud(matrix, max.words = 500, title.size = 2, random.order=FALSE)
+```
+
+This school started on the right note focusing strongly on the conditions of society (1848). The emphasis was on the difference between 'bourgeoisie' (a class that owns most of society's wealth), and proletariat (the working class), and how to mitigate that difference using public ownership of the major resources of society instead of private ownership. These theories and discussions were singular in their approach. By the late 1800's however, the attention moved to ideas on capitalism. It's interesting to see that capitalism and communism focused on the same elements of labour, commodities, products and employment, but these elements were used differently within each school's approach. Communism emphasized on public/ government ownership of these elements, and capitalism, on private ownership of the same elements. However, by competing with capitalism, communism lost proponents because it did not entertain the idea of a 'free market'. Another thing to note here is that communism was trying to mitigate the very thing that capitalism created - inequality in wealth - using the exact same elements. The school did not evolve into finding answers to a fair and just society.
+
+#### The School of Analytics
+
+This school emphasizes on using an analytical approach to understand the world and involves the use of logic.
+
+```{r include = FALSE}
+# Filtering for each school
+school_data = clean_phil_data %>%
+  filter(school == 'analytic') %>%
+  select(text, original_publication_date)
+
+# Creating a character vector list
+year_data = split(school_data$text,school_data$original_publication_date)
+class(year_data)
+text_year = lapply(year_data, FUN = paste, collapse= " ")
+class(text_year)
+
+# Creating a Corpus
+corpus = Corpus(VectorSource(text_year))
+corpus  = tm_map(corpus, content_transformer(stemDocument), language = "english") # Stemming
+
+# Creating a Document Term Matrix
+dtm = TermDocumentMatrix(corpus)
+matrix = as.matrix(dtm)
+colnames(matrix) = c("1910", "1912", "1921", "1950", "1953", "1959", "1972", "1975", "1985")
+```
+
+```{r echo = FALSE, fig.align = "center"}
+# Word cloud comparing text for different years
+comparison.cloud(matrix, max.words = 500, title.size = 2, random.order=FALSE)
+```
+
+The early 1900's analyzed concepts of realism such as truth, sense, existence, time, knowledge and language. These were broad topics to understand how our world worked. However, knowledge of these broad topics required a deep dive into narrower concepts. The late 1900's (1959 onwards) concentrated on actually analyzing narrower topics of the world using analytical frameworks such as theories, conditional probabilities, chance etc. This school got lost a little in the beginning, but eventually found a clear 'analytical' way to achieve its objectives.
+
+#### The School of Continental
+
+This school was formed to differentiate itself from the School of Analytics. It believes that answers to questions about reality cannot be based only on empirical reasoning, rather, they can be achieved through philosophical reflection. However, we don't see a clear thought process or progress in understanding reality through reflection.
+
+```{r include = FALSE}
+# Filtering for each school
+school_data = clean_phil_data %>%
+  filter(school == 'continental') %>%
+  select(text, original_publication_date)
+
+# Creating a character vector list
+year_data = split(school_data$text,school_data$original_publication_date)
+class(year_data)
+text_year = lapply(year_data, FUN = paste, collapse= " ")
+class(text_year)
+
+# Creating a Corpus
+corpus = Corpus(VectorSource(text_year))
+corpus  = tm_map(corpus, content_transformer(stemDocument), language = "english") # Stemming
+
+# Creating a Document Term Matrix
+dtm = TermDocumentMatrix(corpus)
+matrix = as.matrix(dtm)
+colnames(matrix) = c("1961", "1963", "1966", "1967", "1968", "1972")
+```
+
+```{r echo = FALSE, fig.align = "center"}
+comparison.cloud(matrix, max.words = 500, title.size = 2, random.order=FALSE)
+```
+
+Here, different periods focused on different topics that weren't really inter-connected. The early 60's analyzed medicine, health, symptoms and diseases. The mid 60's focused on language, philosophy, science and ideas. The early 70's focused on family and relationships by analyzing concepts such as oedipus(a king in greek mythology who unknowingly killed his father and married his own mother), father, mother, sister and desires. How these come together to conceptualize our world is quite confusing.
+
+### Conclusion
+
+Through the analysis, we see that the field of philosophy is very complex. Although each of the schools had very clear objectives to begin with and topics to focus on, very few made headway into evolving through time and reaching close to those objectives. Most schools either went too deep and got lost, or did not even come close to understanding the ideas they were based on. Having said that, further analysis may be needed to understand the reasons for this. With topics being so convoluted, it's possible that different authors interpreted concepts differently and hence a logical progression did not take for so many schools.
+
+
+
+#### References
+
+1. https://images.squarespace-cdn.com/content/v1/57125c2c2b8dde54a34b537f/1615987424829-HIZ9FRLRQ7CC9A8XVQAP/img-ancient-greek-philosophers.jpg?format=2500w
+
+2. https://www.youtube.com/watch?v=1A_CAkYt3GY
+
+</font>
